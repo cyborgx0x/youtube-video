@@ -1,108 +1,109 @@
 import numpy as np
 from manim import *
 
-
 class GDPOverTime(Scene):
     def construct(self):
-        # Title
-        title = Text("GDP Growth Over Time", font_size=40)
-        subtitle = Text("Understanding Economic Growth", font_size=30)
-        subtitle.next_to(title, DOWN)
+        # Configure for Full HD
+        self.camera.frame_width = 16
+        self.camera.frame_height = 9
+        
+        # Title and subtitle with refined positioning
+        title = Text("GDP Growth Over Time", font_size=48)
+        title.to_edge(UP, buff=0.8)  # Increased buffer for breathing room
+        subtitle = Text("Understanding Economic Growth", font_size=32)
+        subtitle.next_to(title, DOWN, buff=0.4)  # Slightly larger gap
         title_group = VGroup(title, subtitle)
 
         self.play(Write(title_group))
         self.wait(1)
         self.play(FadeOut(title_group))
 
-        # Create axes
+        # Create axes with optimized size and position
         axes = Axes(
             x_range=[1960, 2020, 10],
-            y_range=[0, 25, 5],
+            y_range=[0, 100, 10],
             axis_config={"include_tip": False},
             x_axis_config={"numbers_to_include": np.arange(1960, 2021, 20)},
-            y_axis_config={"numbers_to_include": np.arange(0, 26, 5)},
+            y_axis_config={"numbers_to_include": np.arange(0, 101, 20)},
         )
+    
+        axes.scale(0.75)  # Slightly smaller to fit annotations better
+        axes.center()
+        axes.shift(DOWN * 1.0)  # More downward shift to avoid title overlap
 
         axes_labels = axes.get_axis_labels(x_label="Year", y_label="GDP (Trillion \\$)")
 
-        # Add title to the graph
-        graph_title = Text("Global GDP Growth (1960-2020)", font_size=30)
-        graph_title.to_edge(UP)
+        # Graph title and subtitle with better spacing
+        graph_title = Text("Global GDP Growth (1960-2020)", font_size=36)
+        graph_title.to_edge(UP, buff=0.8)
+        graph_sub = Text("Showing global economic expansion across six decades", font_size=24)
+        graph_sub.next_to(graph_title, DOWN, buff=0.4)
 
-        self.play(Create(axes), Write(axes_labels), Write(graph_title))
+        self.play(Create(axes), Write(axes_labels))
+        self.play(Write(graph_title), Write(graph_sub))
         self.wait(1)
 
-        # GDP data points (simplified for visualization)
-        # Source: World Bank data, simplified for animation purposes
+        # GDP data points (World Bank data in trillion USD)
         years = np.arange(1960, 2021, 5)
-        gdp_values = [
-            1.4,
-            2.2,
-            3.4,
-            6.4,
-            11.3,
-            18.3,
-            31.5,
-            33.6,
-            47.4,
-            65.6,
-            84.9,
-            96.1,
-            97.8,
-        ]  # Added 2020 value
+        gdp_values = [1.39, 2.16, 2.99, 5.99, 11.33, 12.86, 22.73, 31.08, 33.73, 47.72, 66.58, 75.12, 84.71]
 
         # Create the GDP curve
-        gdp_points = [
-            axes.coords_to_point(years[i], gdp_values[i]) for i in range(len(years))
-        ]
+        gdp_points = [axes.coords_to_point(years[i], gdp_values[i]) for i in range(len(years))]
         gdp_line = VMobject()
         gdp_line.set_points_smoothly(gdp_points)
         gdp_line.set_color(BLUE)
 
-        # Animate the drawing of the curve
         self.play(Create(gdp_line), run_time=3)
         self.wait(1)
 
-        # Highlight key periods with explanations
-
+        # Highlight key periods with improved positioning
         # Post-WWII Boom
         boom_period = Rectangle(
             width=axes.x_axis.get_length() * 0.2,
             height=axes.y_axis.get_length() * 0.2,
             color=GREEN,
-        ).move_to(axes.coords_to_point(1965, 2.5))
+        ).move_to(axes.coords_to_point(1965, 7))
 
-        boom_text = Text("Post-WWII Economic Boom", font_size=20, color=GREEN)
-        boom_text.next_to(boom_period, UP)
+        boom_text = Text("Post-WWII Economic Boom", font_size=24, color=GREEN)
+        boom_text.next_to(boom_period, UP, buff=0.3)  # Increased buffer
+        boom_sub = Text("Steady growth following postwar reconstruction", font_size=20)
+        boom_sub.to_edge(DOWN, buff=0.8)  # Higher up to avoid overlap
 
-        self.play(Create(boom_period), Write(boom_text))
+        self.play(Create(boom_period), Write(boom_text), Write(boom_sub))
         self.wait(1.5)
+        self.play(FadeOut(boom_sub))
 
         # Oil Crisis
         oil_period = Rectangle(
             width=axes.x_axis.get_length() * 0.15,
             height=axes.y_axis.get_length() * 0.15,
             color=RED,
-        ).move_to(axes.coords_to_point(1975, 6))
+        ).move_to(axes.coords_to_point(1975, 11))
 
-        oil_text = Text("Oil Crisis Slowdown", font_size=20, color=RED)
-        oil_text.next_to(oil_period, UP)
+        oil_text = Text("Oil Crisis Slowdown", font_size=24, color=RED)
+        oil_text.next_to(oil_period, UP, buff=0.3)
+        oil_sub = Text("Economic impact of the 1970s energy crisis", font_size=20)
+        oil_sub.to_edge(DOWN, buff=0.8)
 
-        self.play(Create(oil_period), Write(oil_text))
+        self.play(Create(oil_period), Write(oil_text), Write(oil_sub))
         self.wait(1.5)
+        self.play(FadeOut(oil_sub))
 
         # Tech Boom
         tech_period = Rectangle(
             width=axes.x_axis.get_length() * 0.15,
             height=axes.y_axis.get_length() * 0.15,
             color=YELLOW,
-        ).move_to(axes.coords_to_point(1995, 35))
+        ).move_to(axes.coords_to_point(1995, 36))
 
-        tech_text = Text("Tech Boom", font_size=20, color=YELLOW)
-        tech_text.next_to(tech_period, UP)
+        tech_text = Text("Tech Boom", font_size=24, color=YELLOW)
+        tech_text.next_to(tech_period, UP, buff=0.3)
+        tech_sub = Text("Rapid growth driven by computing and internet", font_size=20)
+        tech_sub.to_edge(DOWN, buff=0.8)
 
-        self.play(Create(tech_period), Write(tech_text))
+        self.play(Create(tech_period), Write(tech_text), Write(tech_sub))
         self.wait(1.5)
+        self.play(FadeOut(tech_sub))
 
         # Financial Crisis
         crisis_period = Rectangle(
@@ -111,31 +112,35 @@ class GDPOverTime(Scene):
             color=RED,
         ).move_to(axes.coords_to_point(2008, 65))
 
-        crisis_text = Text("Financial Crisis", font_size=20, color=RED)
-        crisis_text.next_to(crisis_period, UP)
+        crisis_text = Text("Financial Crisis", font_size=24, color=RED)
+        crisis_text.next_to(crisis_period, UP, buff=0.3)
+        crisis_sub = Text("Global downturn after housing collapse", font_size=20)
+        crisis_sub.to_edge(DOWN, buff=0.8)
 
-        self.play(Create(crisis_period), Write(crisis_text))
+        self.play(Create(crisis_period), Write(crisis_text), Write(crisis_sub))
         self.wait(1.5)
 
-        # Clean up and prepare for the next segment
+        # Clean up
         cleanup_group = VGroup(
-            boom_period,
-            boom_text,
-            oil_period,
-            oil_text,
-            tech_period,
-            tech_text,
-            crisis_period,
-            crisis_text,
+            boom_period, boom_text, oil_period, oil_text,
+            tech_period, tech_text, crisis_period, crisis_text, crisis_sub
         )
         self.play(FadeOut(cleanup_group))
         self.wait(1)
 
-        # GDP Components Breakdown
+        # GDP Components Breakdown with refined positioning
+        self.play(FadeOut(graph_title), FadeOut(graph_sub))
+        
         gdp_formula = MathTex("GDP = C + I + G + (X - M)")
-        gdp_formula.to_edge(UP, buff=0.5)
+        gdp_formula.scale(1.2)
+        gdp_formula.move_to(UP * 3)  # Precise positioning
 
-        self.play(FadeOut(graph_title), Write(gdp_formula))
+        formula_title = Text("The GDP Formula", font_size=36)
+        formula_title.next_to(gdp_formula, UP, buff=0.5)
+        formula_sub = Text("Components of Gross Domestic Product", font_size=24)
+        formula_sub.next_to(gdp_formula, DOWN, buff=0.5)
+
+        self.play(Write(formula_title), Write(gdp_formula), Write(formula_sub))
         self.wait(1)
 
         component_texts = [
@@ -146,26 +151,25 @@ class GDPOverTime(Scene):
             "M = Imports",
         ]
 
-        components = VGroup(*[Text(text, font_size=24) for text in component_texts])
-        components.arrange(DOWN, aligned_edge=LEFT, buff=0.3)
-        components.next_to(gdp_formula, DOWN, buff=0.5)
+        components = VGroup(*[Text(text, font_size=28) for text in component_texts])
+        components.arrange(DOWN, aligned_edge=LEFT, buff=0.5)
+        components.next_to(formula_sub, DOWN, buff=0.7)
 
         for component in components:
             self.play(Write(component))
             self.wait(0.5)
 
         self.wait(1)
+        self.play(FadeOut(components), FadeOut(gdp_formula), FadeOut(formula_title), FadeOut(formula_sub))
 
-        # Transition to pie chart
-        self.play(FadeOut(components), FadeOut(gdp_formula))
+        # Pie chart with optimized positioning
+        pie_title = Text("Typical GDP Composition", font_size=36)
+        pie_title.to_edge(UP, buff=0.8)
+        pie_sub = Text("Average distribution in developed economies", font_size=24)
+        pie_sub.next_to(pie_title, DOWN, buff=0.4)
 
-        # Create a pie chart showing typical GDP components
-        pie_title = Text("Typical GDP Composition", font_size=30)
-        pie_title.to_edge(UP)
+        self.play(Write(pie_title), Write(pie_sub))
 
-        self.play(Write(pie_title))
-
-        # Values are approximate percentages for visualization
         pie_values = [60, 20, 15, 5]  # C, I, G, Net Exports
         pie_colors = [BLUE, GREEN, YELLOW, RED]
         pie_labels = [
@@ -175,20 +179,15 @@ class GDPOverTime(Scene):
             "Net Exports\n5%",
         ]
 
-        pie = VGroup()
+        sectors = VGroup()
+        labels = VGroup()
         total = sum(pie_values)
         start_angle = 0
 
-        # Create pie sectors
-        sectors = VGroup()
-        labels = VGroup()
-
-        for i, (value, color, label_text) in enumerate(
-            zip(pie_values, pie_colors, pie_labels)
-        ):
+        for value, color, label_text in zip(pie_values, pie_colors, pie_labels):
             angle = value * 2 * PI / total
             sector = Sector(
-                radius=2,
+                radius=2.8,  # Slightly larger for clarity
                 angle=angle,
                 start_angle=start_angle,
                 color=color,
@@ -196,17 +195,21 @@ class GDPOverTime(Scene):
             )
             sectors.add(sector)
 
-            # Position labels
             mid_angle = start_angle + angle / 2
-            label_pos = sector.get_center() * 1.5
-            label = Text(label_text, font_size=20)
+            label_pos = np.array([
+                4.0 * np.cos(mid_angle),  # Farther from center
+                4.0 * np.sin(mid_angle),
+                0
+            ])
+            label = Text(label_text, font_size=24)
             label.move_to(label_pos)
             labels.add(label)
 
             start_angle += angle
 
         pie = VGroup(sectors, labels)
-        pie.next_to(pie_title, DOWN, buff=0.5)
+        pie.center()
+        pie.shift(DOWN * 0.5)  # Adjusted to avoid title overlap
 
         self.play(Create(sectors), run_time=2)
         for label in labels:
@@ -214,18 +217,18 @@ class GDPOverTime(Scene):
 
         self.wait(2)
 
-        # Final message
-        final_title = Text("Factors Affecting GDP Growth", font_size=36)
-        final_title.to_edge(UP)
-
+        # Final message with refined positioning
         self.play(
-            FadeOut(pie),
-            FadeOut(pie_title),
-            FadeOut(axes),
-            FadeOut(axes_labels),
-            FadeOut(gdp_line),
-            Write(final_title),
+            FadeOut(pie), FadeOut(pie_title), FadeOut(pie_sub), FadeOut(axes),
+            FadeOut(axes_labels), FadeOut(gdp_line)
         )
+        
+        final_title = Text("Factors Affecting GDP Growth", font_size=40)
+        final_title.to_edge(UP, buff=0.8)
+        factors_sub = Text("Key determinants of economic trends", font_size=28)
+        factors_sub.next_to(final_title, DOWN, buff=0.4)
+
+        self.play(Write(final_title), Write(factors_sub))
 
         factors = [
             "Technology & Innovation",
@@ -236,9 +239,10 @@ class GDPOverTime(Scene):
             "Infrastructure",
         ]
 
-        factor_texts = VGroup(*[Text(factor, font_size=30) for factor in factors])
-        factor_texts.arrange(DOWN, aligned_edge=LEFT, buff=0.4)
-        factor_texts.next_to(final_title, DOWN, buff=0.5)
+        factor_texts = VGroup(*[Text(factor, font_size=32) for factor in factors])
+        factor_texts.arrange(DOWN, aligned_edge=LEFT, buff=0.6)
+        factor_texts.next_to(factors_sub, DOWN, buff=0.8)
+        factor_texts.center()
 
         for factor in factor_texts:
             self.play(Write(factor))
@@ -246,21 +250,26 @@ class GDPOverTime(Scene):
 
         self.wait(2)
 
-        # Conclusion
+        # Conclusion with optimized placement
         conclusion = Text(
-            "Understanding GDP helps us measure economic growth and prosperity",
-            font_size=24,
+            "Understanding GDP measures economic prosperity",
+            font_size=32,
         )
-        conclusion.next_to(factor_texts, DOWN, buff=0.8)
+        conclusion.next_to(factor_texts, DOWN, buff=1.2)
 
         self.play(Write(conclusion))
         self.wait(3)
 
-        self.play(FadeOut(VGroup(final_title, factor_texts, conclusion)))
+        self.play(FadeOut(VGroup(final_title, factors_sub, factor_texts, conclusion)))
 
         # Final credits
-        credits = Text("Created with Manim", font_size=30)
-        self.play(Write(credits))
+        credits = Text("Created with Manim", font_size=36)
+        credits_sub = Text("© 2025 - Full HD Animation", font_size=24)
+        credits_sub.next_to(credits, DOWN, buff=0.4)
+        credits_group = VGroup(credits, credits_sub)
+        credits_group.center()
+        
+        self.play(Write(credits_group))
         self.wait(2)
-        self.play(FadeOut(credits))
+        self.play(FadeOut(credits_group))
         self.wait(1)
